@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components'
-import './App.css';
+import classes from './App.module.css';
 import Person from './Person/Person';
 import Validation from './Validation/Validation';
 import Char from './Char/Char';
@@ -86,10 +86,10 @@ class App extends Component {
     }
     let userInputChar = (<p>{this.state.userInput}</p>)
     let dynamicClass;
-    if (this.state.persons.length === 2) dynamicClass = 'bold';
-    if (this.state.persons.length === 1) dynamicClass = 'red';
+    if (this.state.persons.length === 2) dynamicClass = classes.bold;
+    if (this.state.persons.length === 1) dynamicClass = classes.red;
     return (
-        <div className="App">
+        <div className={classes.App}>
           <p className={dynamicClass}>Hi, I'm a React app</p>
           <StyledButton
             alt={this.state.showPersons}
