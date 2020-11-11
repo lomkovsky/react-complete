@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 import classes from './Cockpit.module.css';
-// import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 
-const cockpit = (props) => {
+const Cockpit = (props) => {
+  useEffect(() => {
+    console.log('[Cockpit.js] useEffect')
+  })
   const StyledButton = styled.button`
       background-color: ${props => props.alt ==='true' ? 'red' : 'green'};
       font: inherit;
@@ -32,4 +35,4 @@ const cockpit = (props) => {
       );
 }
 
-export default cockpit;
+export default Cockpit;
