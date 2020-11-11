@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import styled from 'styled-components'
+
 import classes from './App.module.css';
-import Person from './Person/Person';
-import Validation from './Validation/Validation';
-import Char from './Char/Char';
+import Validation from '../components/Validation/Validation';
+import Char from '../components/Char/Char';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
   state = {
@@ -13,7 +14,7 @@ class App extends Component {
       { id: 'sdgshhg', name: "Stephanie", age: 30 },
     ],
     userInput: '',
-    showPersons: false,
+    showPersons: 0,
   }
 
   deletePersonHandler = (personIndex) => {
@@ -48,21 +49,7 @@ class App extends Component {
   }
 
   render() {
-    const StyledButton = styled.button`
-      background-color: ${props => props.alt ? 'red' : 'green'};
-      font: inherit;
-      border-radius: 3px;
-      border: 1px solid blue;
-      color: white;
-      margin: 0 1em;
-      padding: 8px;
-      cursor: pointer;
-
-      &:hover {
-        background-color: ${props => props.alt ? 'salmon' : 'lightgreen'};
-        color: black;
-      }
-    `
+    
     let persons = null;
     const charList = this.state.userInput.split('').map((ch, index) => {
      return <Char 
@@ -73,27 +60,22 @@ class App extends Component {
     if (this.state.showPersons) {
       persons = (
         <div>
-            {this.state.persons.map((person, index) => {
-              return <Person 
-                click={() => this.deletePersonHandler(index)}
-                name={person.name} 
-                age={person.age}
-                key={person.id}
-                changed={(event) => this.nameChangedHandler(event, person.id)} />
-            })}
+          <Persons
+          persons={this.state.persons}
+          clicked={this.deletePersonHandler}
+          changed={this.nameChangedHandler}/>
         </div>
       )
     }
     let userInputChar = (<p>{this.state.userInput}</p>)
-    let dynamicClass;
-    if (this.state.persons.length === 2) dynamicClass = classes.bold;
-    if (this.state.persons.length === 1) dynamicClass = classes.red;
+    
     return (
         <div className={classes.App}>
-          <p className={dynamicClass}>Hi, I'm a React app</p>
-          <StyledButton
-            alt={this.state.showPersons}
-            onClick={this.togglePersonsHandler}>Toggle Persons</StyledButton>
+            <Cockpit 
+              showPersons={this.state.showPersons}
+              togglePersonsHandler={this.togglePersonsHandler}
+              title={this.props.appTitle}
+              persons={this.state.persons}/>
             {persons}
             <div>
               <input type="text" onChange={this.inputUserCharHandler} value={this.state.userInput}/>
