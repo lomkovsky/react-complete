@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components'
 
+
+import AuthContext from '../../../context/auth-context';
+
 const StyledDiv = styled.div`
   width: 60%;
   margin: 16px auto;
@@ -23,7 +26,11 @@ const person = (props) => {
 return (
   //  <div className="Person" style={style}>
     <StyledDiv>
-      <p onClick={props.click}> I'm a {props.name} and I am {props.age}!</p>
+      <AuthContext.Consumer>
+        {(context) => context.authenticate ? <p>Authented!</p> :  <p>Please log in</p>}
+      </AuthContext.Consumer>
+      <p 
+        onClick={props.click}> I'm a {props.name} and I am {props.age}!</p>
       <p>{props.children}</p>
       <input type="text" onChange={props.changed} value={props.name}/>
     </StyledDiv>

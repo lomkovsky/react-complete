@@ -5,8 +5,12 @@ import Validation from '../components/Validation/Validation';
 import Char from '../components/Char/Char';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import AuthContext from '../context/auth-context';
 
 class App extends Component {
+
+  static contextType = AuthContext;
+
   state = {
     persons: [
       { id: 'saffdsa', name: "Max", age: 10 },
@@ -15,6 +19,7 @@ class App extends Component {
     ],
     userInput: '',
     showPersons: 0,
+    authenticate: false,
   }
 
   deletePersonHandler = (personIndex) => {
@@ -48,6 +53,10 @@ class App extends Component {
     this.setState({showPersons: !doesShow});
   }
 
+  loginHandler = () => {
+    this.setState({authenticate: true})
+  };
+
   render() {
     
     let persons = null;
@@ -63,6 +72,7 @@ class App extends Component {
           <Persons
           persons={this.state.persons}
           clicked={this.deletePersonHandler}
+          isAuthenticated={this.state.authenticate}
           changed={this.nameChangedHandler}/>
         </div>
       )
@@ -71,12 +81,18 @@ class App extends Component {
     
     return (
         <div className={classes.App}>
-            <Cockpit 
-              showPersons={this.state.showPersons}
-              togglePersonsHandler={this.togglePersonsHandler}
-              title={this.props.appTitle}
-              persons={this.state.persons}/>
-            {persons}
+            <AuthContext.Provider value={{
+              authenticate: this.state.authenticate, 
+              login: this.loginHandler
+              }}
+            >
+              <Cockpit 
+                showPersons={this.state.showPersons}
+                togglePersonsHandler={this.togglePersonsHandler}
+                title={this.props.appTitle}
+                personsLength={this.state.persons.length}/>
+              {persons}
+            </AuthContext.Provider>
             <div>
               <input type="text" onChange={this.inputUserCharHandler} value={this.state.userInput}/>
               {userInputChar}
