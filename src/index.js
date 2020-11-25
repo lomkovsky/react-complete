@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './containers/App';
 import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App appTitle="Person Manager"/>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const app = (
+  <BrowserRouter>
+    <App appTitle="Burger app"/>
+  </BrowserRouter>
+)
+ReactDOM.render(app, document.getElementById('root'));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
