@@ -6,6 +6,7 @@ import API from 'apisauce'; // ivorySoft
 import Layout from './Layout/Layout';
 import BurgerBuilder from '../containers/BurgerBuilder/BurgerBuilder';
 import Checkout from './Checkout/Checkout';
+import Orders from './Orders/Orders';
 
 const baseURL = 'https://api-management.ivorysoft.co/' // ivorySoft
 const ApiCall = API.create({ 
@@ -56,6 +57,7 @@ class App extends Component {
           <Layout>
             <Switch>
               <Route path="/checkout" component={Checkout} />
+              <Route path="/orders" component={Orders} />
               <Route path="/" exact component={BurgerBuilder} />
             </Switch>
           </Layout>

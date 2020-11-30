@@ -1,14 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 import './index.css';
 import App from './containers/App';
 import reportWebVitals from './reportWebVitals';
+import reducer from './store/reducer';
+
+const store = createStore(reducer);
 
 const app = (
-  <BrowserRouter>
-    <App appTitle="Burger app"/>
-  </BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      <App appTitle="Burger app"/>
+    </BrowserRouter>
+  </Provider>
 )
 ReactDOM.render(app, document.getElementById('root'));
 
