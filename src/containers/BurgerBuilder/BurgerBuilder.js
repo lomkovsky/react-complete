@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import Aux from '../../hoc/Aux';
 import Burger from '../../components/Burger/Burger';
@@ -7,24 +8,23 @@ import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
-import axios from '../../axios-orders';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import actionTypes from '../../store/actions';
+import axios from '../../axios-orders';
+import {
+  addIngredient, 
+  removeIngredient,
+  initIngredients,
+  purchaseInit,
+} from '../../store/actions/index';
 
 class BurgerBuilder extends Component {
 
   state = {
     purchasing: false,
-    loading: false,
-    error: false,
   }
 
   componentDidMount() {
-    // axios.get('/ingredients.json')
-    //   .then((response) => {
-    //     this.setState({ingredients: response.data})
-    //   })
-    //   .catch(error => { this.setState({error}) })
+    this.props.onIngredientsInit();
   }
 
   updatePurchaseState (ingredients) {
@@ -72,7 +72,11 @@ class BurgerBuilder extends Component {
   // }
 
   purchaseHandler = () => {
-    this.setState({purchasing: true});
+    if(this.props.isAuthenticated) {
+      this.setState({purchasing: true});
+    } else {
+      this.props.history.push('./auth');
+    }
   }
 
   purchaseCancelHandler = () => {
@@ -90,6 +94,7 @@ class BurgerBuilder extends Component {
   //   pathname: '/checkout',
   //   search: '?' + queryString,
   // });
+  this.props.onInitPurchase();
   this.props.history.push('/checkout');
   }
 
@@ -101,7 +106,7 @@ class BurgerBuilder extends Component {
       disabledInfo[key] = disabledInfo[key] <= 0
     }
     let orderSummary = null;
-    let burger = this.state.error ? <p>ingredients can't be loaded</p> : <Spinner />
+    let burger = this.props.error ? <p>ingredients can't be loaded</p> : <Spinner />
     if (this.props.ings) {
       orderSummary = <OrderSummary 
       purchaseCancelled={this.purchaseCancelHandler}
@@ -118,12 +123,10 @@ class BurgerBuilder extends Component {
               purchasable={this.updatePurchaseState(this.props.ings)}
               ordered={this.purchaseHandler}
               ingredientRemoved={this.props.onIngredientRemoved}
+              isAuth={this.props.isAuthenticated}
               ingredientAdded={this.props.onIngredientAdded}/>
         </Aux>
         );
-      }
-      if (this.state.loading) {
-        orderSummary = <Spinner />;
       }
     return (
       <Aux>
@@ -140,15 +143,19 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
-    ings: state.ingredients,
-    price: state.totalPrice,
+    ings: state.burgerBuilder.ingredients,
+    price: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error,
+    isAuthenticated: state.auth.token !== null,
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onIngredientAdded: (ingredientName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName}),
-    onIngredientRemoved: (ingredientName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName}),
+    onIngredientAdded: (ingredientName) => dispatch(addIngredient(ingredientName)),
+    onIngredientRemoved: (ingredientName) => dispatch(removeIngredient(ingredientName)),
+    onIngredientsInit: () => dispatch(initIngredients()),
+    onInitPurchase: () => dispatch(purchaseInit()),
   }
 }
 

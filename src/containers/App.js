@@ -7,6 +7,8 @@ import Layout from './Layout/Layout';
 import BurgerBuilder from '../containers/BurgerBuilder/BurgerBuilder';
 import Checkout from './Checkout/Checkout';
 import Orders from './Orders/Orders';
+import Auth from './Auth/Auth';
+import Logout from './Auth/Logout';
 
 const baseURL = 'https://api-management.ivorysoft.co/' // ivorySoft
 const ApiCall = API.create({ 
@@ -58,6 +60,8 @@ class App extends Component {
             <Switch>
               <Route path="/checkout" component={Checkout} />
               <Route path="/orders" component={Orders} />
+              <Route path="/auth" component={Auth} />
+              <Route path="/logout" component={Logout} />
               <Route path="/" exact component={BurgerBuilder} />
             </Switch>
           </Layout>
